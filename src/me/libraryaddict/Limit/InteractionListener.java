@@ -115,7 +115,7 @@ public class InteractionListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (event.isCancelled() || disallowedWorlds.contains(event.getBlock().getWorld().getName())) {
+        if (event.isCancelled() || disallowedWorlds.contains(event.getBlock().getWorld().getName()) || event.getPlayer().hasPermission("limitcreative.nolore")) {
             return;
         }
         if (getConfig().getBoolean("MarkBlocks")
@@ -393,7 +393,6 @@ public class InteractionListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPush(BlockPistonExtendEvent event) {
         if (disallowedWorlds.contains(event.getBlock().getWorld().getName())) {
-            return;
         }
         for (Block block : event.getBlocks()) {
             if (StorageApi.isMarked(block)) {
