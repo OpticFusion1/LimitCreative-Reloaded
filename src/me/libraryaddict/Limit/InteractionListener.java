@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import net.minecraft.util.com.google.common.base.Objects;
+import com.google.common.base.Objects;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -59,11 +59,6 @@ public class InteractionListener implements Listener {
             try {
                 disallowedItems.add(Material.valueOf(disallowed.toUpperCase()));
             } catch (Exception ex) {
-                try {
-                    disallowedItems.add(Material.getMaterial(Integer.parseInt(disallowed)));
-                } catch (Exception e) {
-                    System.out.print("[LimitCreative] Cannot parse " + disallowed + " to a valid material");
-                }
             }
         }
     }
@@ -188,7 +183,7 @@ public class InteractionListener implements Listener {
         for (ItemStack item : event.getInventory().getMatrix()) {
             if (isCreativeItem(item)) {
                 if (event.getViewers().get(0).getGameMode() != GameMode.CREATIVE && getConfig().getBoolean("PreventCrafting")) {
-                    event.getInventory().setItem(0, new ItemStack(0, 0));
+                    event.getInventory().setItem(0, new ItemStack(Material.AIR));
                 } else if (getConfig().getBoolean("RenameCrafting")) {
                     setCreativeItem(event.getViewers().get(0).getName(), event.getInventory().getItem(0));
                 }
@@ -282,7 +277,7 @@ public class InteractionListener implements Listener {
             for (int i = 0; i < 4; i++) {
                 ItemStack item = items[i];
                 if (isCreativeItem(item)) {
-                    items[i] = new ItemStack(0);
+                    items[i] = new ItemStack(Material.AIR);
                     HashMap<Integer, ItemStack> leftovers = event.getPlayer().getInventory().addItem(item);
                     for (ItemStack leftoverItem : leftovers.values()) {
                         event.getPlayer().getWorld().dropItem(event.getPlayer().getEyeLocation(), leftoverItem);
@@ -430,7 +425,7 @@ public class InteractionListener implements Listener {
     }
 
     private ItemStack setCreativeItem(String who, ItemStack item) {
-        if (item != null && item.getType() != Material.AIR && item.getType() != Material.BOOK_AND_QUILL) {
+        if (item != null && item.getType() != Material.AIR && item.getType() != Material.WRITABLE_BOOK && item.getType() != Material.LEGACY_BOOK_AND_QUILL) {
             if (!isCreativeItem(item)) {
                 ItemMeta meta = item.getItemMeta();
                 List<String> lore = new ArrayList<String>();
