@@ -1,0 +1,6 @@
+1.8.1:
+- Updated for 1.13.x
+- Added `limitcreative.nolore` permission to allow for user-bypass
+
+1.8.2:
+- Added 1.14.x support
