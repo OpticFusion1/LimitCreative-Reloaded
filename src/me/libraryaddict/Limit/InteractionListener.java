@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.google.common.base.Objects;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -115,7 +116,7 @@ public class InteractionListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (event.isCancelled() || disallowedWorlds.contains(event.getBlock().getWorld().getName()) || event.getPlayer().hasPermission("limitcreative.nolore")) {
+        if (event.isCancelled() || disallowedWorlds.contains(event.getBlock().getWorld().getName())) {
             return;
         }
         if (getConfig().getBoolean("MarkBlocks")
@@ -425,6 +426,9 @@ public class InteractionListener implements Listener {
 
     private ItemStack setCreativeItem(String who, ItemStack item) {
         if (item != null && item.getType() != Material.AIR && item.getType() != Material.WRITABLE_BOOK && item.getType() != Material.LEGACY_BOOK_AND_QUILL) {
+            if(Bukkit.getServer().getPlayer(who) != null && Bukkit.getServer().getPlayer(who).hasPermission("limitcreative.nolore")) {
+                return item;
+            }
             if (!isCreativeItem(item)) {
                 ItemMeta meta = item.getItemMeta();
                 List<String> lore = new ArrayList<String>();
