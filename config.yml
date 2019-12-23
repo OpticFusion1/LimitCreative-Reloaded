@@ -2,6 +2,12 @@
 # Make sure to end it with "%Name%"
 ItemMessage: '&6Spawned in creative by %Name%'
 
+# Commands that should be disabled when users are in Creative mode
+BlacklistedCommands:
+  - ah
+  - pv
+  - examplecommand
+
 # Rename the crafting result if its a spawned item
 RenameCrafting: true
 
@@ -18,7 +24,7 @@ PreventArmor: true
 # Mark blocks which are creative spawned in to drop creative spawned items.
 MarkBlocks: true
 
-# What worlds are disabled  for this.
+# What worlds are disabled for this.
 # It means this plugin will ignore that world.
 # Items carried over from that world WILL be usable.
 # You will need to have another plugin to seperate inventories.

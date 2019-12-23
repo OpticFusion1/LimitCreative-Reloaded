@@ -37,10 +37,7 @@ import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerGameModeChangeEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -50,12 +47,14 @@ public class InteractionListener implements Listener {
     private final String creativeMessage;
     private final ArrayList<Material> disallowedItems = new ArrayList<Material>();
     private final List<String> disallowedWorlds;
+    private final List<String> blacklistedCommands;
     private final JavaPlugin plugin;
 
     public InteractionListener(JavaPlugin plugin) {
         this.plugin = plugin;
         creativeMessage = ChatColor.translateAlternateColorCodes('&', getConfig().getString("ItemMessage"));
         disallowedWorlds = getConfig().getStringList("WorldsDisabled");
+        blacklistedCommands = getConfig().getStringList("BlacklistedCommands");
         for (String disallowed : getConfig().getStringList("DisabledItems")) {
             try {
                 disallowedItems.add(Material.valueOf(disallowed.toUpperCase()));
@@ -102,6 +101,21 @@ public class InteractionListener implements Listener {
             }
         }
         return false;
+    }
+
+    @EventHandler
+    public void onCommand(PlayerCommandPreprocessEvent event) {
+        Player player = event.getPlayer();
+        if(player.hasPermission("limitcreative.bypasscmd")) {
+            return;
+        }
+        String command = event.getMessage().replace("/", "");
+        for(String cmd : blacklistedCommands) {
+            if(command.startsWith(cmd) || cmd.equals("*")) {
+                player.sendMessage(ChatColor.DARK_RED + "This command is disabled in Creative mode.");
+                event.setCancelled(true);
+            }
+        }
     }
 
     @EventHandler
