@@ -354,18 +354,19 @@ public class InteractionListener implements Listener {
             }
         }
 
-        if (!event.getWhoClicked().hasPermission("limitcreative.itemtransfer")) {
+        /**if (!event.getWhoClicked().hasPermission("limitcreative.itemtransfer")) {
             Inventory top = event.getView().getTopInventory();
             Inventory bottom = event.getView().getBottomInventory();
 
             if (!Objects.equal(top, bottom)) {
                 if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
                     if (isCreativeItem(event.getCurrentItem())) {
+                        event.getWhoClicked().getInventory().remove(event.getCurrentItem());
                         event.setCancelled(true);
                     }
                 }
             }
-        }
+        }**/
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
