@@ -1,7 +1,7 @@
 name: LimitCreative
 main: me.libraryaddict.Limit.Creative
 author: [libraryaddict, Zenya4]
-version: 1.8.5
+version: 1.8.6
 api-version: 1.15
 commands:
   clearlore:

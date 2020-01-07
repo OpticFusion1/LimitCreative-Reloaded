@@ -29,14 +29,7 @@ import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.inventory.BrewEvent;
-import org.bukkit.event.inventory.FurnaceSmeltEvent;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCreativeEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -354,16 +347,13 @@ public class InteractionListener implements Listener {
             }
         }
 
-        /**if (!event.getWhoClicked().hasPermission("limitcreative.itemtransfer")) {
+        /**if(getConfig().getBoolean("PreventTransfer")) {
             Inventory top = event.getView().getTopInventory();
             Inventory bottom = event.getView().getBottomInventory();
 
             if (!Objects.equal(top, bottom)) {
-                if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
-                    if (isCreativeItem(event.getCurrentItem())) {
-                        event.getWhoClicked().getInventory().remove(event.getCurrentItem());
-                        event.setCancelled(true);
-                    }
+                if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY || event.getAction() == InventoryAction.DROP_ALL_CURSOR || event.getAction() == InventoryAction.DROP_ONE_CURSOR || event.getAction() == InventoryAction.DROP_ALL_SLOT || event.getAction() == InventoryAction.DROP_ONE_SLOT) {
+                    event.setCancelled(true);
                 }
             }
         }**/
@@ -375,7 +365,7 @@ public class InteractionListener implements Listener {
             return;
         }
 
-        if (!event.getWhoClicked().hasPermission("limitcreative.itemtransfer")) {
+        if (getConfig().getBoolean("PreventTransfer")) {
             Inventory top = event.getView().getTopInventory();
             Inventory bottom = event.getView().getBottomInventory();
 
@@ -394,15 +384,21 @@ public class InteractionListener implements Listener {
         if (disallowedWorlds.contains(event.getPlayer().getWorld().getName())) {
             return;
         }
-        if (!event.getPlayer().hasPermission("limitcreative.pickupcreativeitem")) {
+        if (!event.getPlayer().hasPermission("limitcreative.pickupitem")) {
             if (event.getPlayer().getGameMode() != GameMode.CREATIVE && isCreativeItem(event.getItem().getItemStack())) {
                 event.setCancelled(true);
             }
         }
-        if (!event.getPlayer().hasPermission("limitcreative.pickupsurvivalitem")) {
-            if (event.getPlayer().getGameMode() == GameMode.CREATIVE && !isCreativeItem(event.getItem().getItemStack())) {
-                event.setCancelled(true);
-            }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onDrop(PlayerDropItemEvent event) {
+        if (disallowedWorlds.contains(event.getPlayer().getWorld().getName())) {
+            return;
+        }
+
+        if (getConfig().getBoolean("PreventDrop") && isCreativeItem(event.getItemDrop().getItemStack())) {
+            event.getItemDrop().remove();
         }
     }
 

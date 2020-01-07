@@ -1,5 +1,6 @@
 package me.libraryaddict.Limit;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -64,7 +65,17 @@ public class Creative extends JavaPlugin implements Listener {
     }
 
     public void onEnable() {
-        saveDefaultConfig();
+
+        File configFile = new File(this.getDataFolder(), "config.yml");
+        if(!configFile.exists()) {
+            saveDefaultConfig();
+        }
+
+        if(!getConfig().contains("config-version") || getConfig().getInt("config-version") != 3) {
+            configFile.delete();
+            saveDefaultConfig();
+        }
+
         listener = new InteractionListener(this);
         Bukkit.getPluginManager().registerEvents(listener, this);
         StorageApi.setMainPlugin(this);
