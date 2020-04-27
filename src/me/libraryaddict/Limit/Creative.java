@@ -46,19 +46,18 @@ public class Creative extends JavaPlugin implements Listener {
                         item.setItemMeta(meta);
                     }
                     if (!removed)
-                        sender.sendMessage(ChatColor.RED + "Didn't find the creative message on the item!");
+                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getConfig().getString("NoCreativeLoreOnItem")));
                     else
-                        sender.sendMessage(ChatColor.RED + "Removed the creative lore from the item!");
+                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getConfig().getString("LoreRemoveSuccess")));
                 } else
-                    sender.sendMessage(ChatColor.RED + "You are not holding a item!");
+                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getConfig().getString("NotHoldingItem")));
             } else
-                sender.sendMessage(ChatColor.RED + "You do not have permission to use this command");
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getConfig().getString("NoPermissionMessage")));
         } else if (cmd.getName().equalsIgnoreCase("limitcreativeconvert")) {
             if (sender.hasPermission("limitcreative.convert")) {
-                sender.sendMessage(ChatColor.RED + "Now converting flatfile to mysql.. You may see lag");
                 StorageApi.loadBlocksFromFlatfile();
                 StorageApi.saveBlocksToMysql();
-                sender.sendMessage(ChatColor.RED + "Converted!");
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', this.getConfig().getString("ConvertSQLiteToMySQL")));
             }
         }
         return true;
@@ -71,7 +70,7 @@ public class Creative extends JavaPlugin implements Listener {
             saveDefaultConfig();
         }
 
-        if(!getConfig().contains("config-version") || getConfig().getInt("config-version") != 4) {
+        if(!getConfig().contains("config-version") || getConfig().getInt("config-version") != 5) {
             configFile.delete();
             saveDefaultConfig();
         }

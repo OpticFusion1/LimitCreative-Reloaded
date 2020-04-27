@@ -1,5 +1,5 @@
 # Do not change this value
-config-version: 4
+config-version: 5
 
 # The message that appears on the item.
 # Make sure to end it with "%Name%"
@@ -10,6 +10,18 @@ DisallowedCommandMessage: '&4You are not allowed to use this command in creative
 
 # Error shown to player when a disabled item is used in Creative mode
 DisabledItemMessage: '&4You are not allowed to use this item in creative mode'
+
+# The following items are messages for when LimitCreative commands are used (/removelore, /limitcreativeconvert)
+# Error shown when /removelore command is used on an item with no Creative lore
+NoCreativeLoreOnItem: '&cCannot find the creative message on the item!'
+# Success message for /removelore
+LoreRemoveSuccess: '&aRemoved the creative lore from the item!'
+# Error shown when /removelore command is used on an empty inventory slot
+NotHoldingItem: '&cYou must be holding an item to do this!'
+# Error shown when player does not have permission to use a command
+NoPermissionMessage: '&4You do not have permission to use this command!'
+# Success message for /limitcreativeconvert
+ConvertSQLiteToMySQL: '&aSuccessfully converted SQLite database to MySQL!'
 
 # Commands that should be disabled when users are in Creative mode
 BlacklistedCommands:

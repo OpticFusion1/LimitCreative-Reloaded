@@ -24,3 +24,6 @@
 1.8.8:
 - Fixed bug where players cannot not type disallowed commands in survival mode
 - Added locale for more plugin messages in config.yml
+
+1.8.9:
+- Added more command locale options in config.yml
