@@ -20,3 +20,7 @@
 
 1.8.7
 - Fixed plugin sometimes not working for versions 1.13.x - 1.14.x
+
+1.8.8:
+- Fixed bug where players cannot not type disallowed commands in survival mode
+- Added locale for more plugin messages in config.yml

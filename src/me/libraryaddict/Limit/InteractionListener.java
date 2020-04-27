@@ -99,13 +99,16 @@ public class InteractionListener implements Listener {
     @EventHandler
     public void onCommand(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
+        if(!player.getGameMode().equals(GameMode.CREATIVE)) {
+            return;
+        }
         if(player.hasPermission("limitcreative.bypasscmd")) {
             return;
         }
         String command = event.getMessage().replace("/", "");
         for(String cmd : blacklistedCommands) {
             if(command.startsWith(cmd) || cmd.equals("*")) {
-                player.sendMessage(ChatColor.DARK_RED + "This command is disabled in Creative mode.");
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("DisallowedCommandMessage")));
                 event.setCancelled(true);
             }
         }
@@ -213,7 +216,7 @@ public class InteractionListener implements Listener {
 
                 event.setCancelled(true);
                 if (event.getWhoClicked() instanceof Player) {
-                    ((Player) event.getWhoClicked()).sendMessage(ChatColor.RED + "You are not allowed to use this item!");
+                    ((Player) event.getWhoClicked()).sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("DisabledItemMessage")));
                 }
             }
         }

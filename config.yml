@@ -1,9 +1,15 @@
 # Do not change this value
-config-version: 3
+config-version: 4
 
 # The message that appears on the item.
 # Make sure to end it with "%Name%"
 ItemMessage: '&6Spawned in creative by %Name%'
+
+# Error shown to player when a disallowed command is used in Creative mode
+DisallowedCommandMessage: '&4You are not allowed to use this command in creative mode'
+
+# Error shown to player when a disabled item is used in Creative mode
+DisabledItemMessage: '&4You are not allowed to use this item in creative mode'
 
 # Commands that should be disabled when users are in Creative mode
 BlacklistedCommands:

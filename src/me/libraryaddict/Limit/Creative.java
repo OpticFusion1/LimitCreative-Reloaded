@@ -71,7 +71,7 @@ public class Creative extends JavaPlugin implements Listener {
             saveDefaultConfig();
         }
 
-        if(!getConfig().contains("config-version") || getConfig().getInt("config-version") != 3) {
+        if(!getConfig().contains("config-version") || getConfig().getInt("config-version") != 4) {
             configFile.delete();
             saveDefaultConfig();
         }
