@@ -21,10 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -254,8 +251,32 @@ public class InteractionListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onExplode(EntityExplodeEvent event) {
+    public void onEntityExplode(EntityExplodeEvent event) {
         if (disallowedWorlds.contains(event.getLocation().getWorld().getName())) {
+            return;
+        }
+        for (Block block : event.blockList()) {
+            if (StorageApi.isMarked(block)) {
+                String message = StorageApi.unmarkBlock(block);
+                for (ItemStack item : block.getDrops()) {
+                    ItemMeta meta = item.getItemMeta();
+                    List<String> lore = new ArrayList<String>();
+                    if (meta.hasLore()) {
+                        lore = meta.getLore();
+                    }
+                    lore.add(0, message);
+                    meta.setLore(lore);
+                    item.setItemMeta(meta);
+                    block.getWorld().dropItemNaturally(block.getLocation().clone().add(0.5, 0, 0.5), item);
+                }
+                block.setType(Material.AIR);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onBlockExplode(BlockExplodeEvent event) {
+        if (disallowedWorlds.contains(event.getBlock().getLocation().getWorld().getName())) {
             return;
         }
         for (Block block : event.blockList()) {

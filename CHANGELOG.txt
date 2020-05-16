@@ -27,3 +27,6 @@
 
 1.8.9:
 - Added more command locale options in config.yml
+
+1.8.10:
+- Fixed bug where creative-mode-placed blocks exploded by withers do not drop with lore
