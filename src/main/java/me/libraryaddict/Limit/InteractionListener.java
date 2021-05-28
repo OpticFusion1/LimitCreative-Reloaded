@@ -128,7 +128,9 @@ public class InteractionListener implements Listener {
         }
         if (getConfig().getBoolean("MarkBlocks")
                 && (isCreativeItem(event.getItemInHand()) || event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
-            StorageApi.markBlock(event.getBlockPlaced(), getCreativeString(event.getItemInHand()));
+            if(!event.getPlayer().hasPermission("limitcreative.nolore")) {
+                StorageApi.markBlock(event.getBlockPlaced(), getCreativeString(event.getItemInHand()));
+            }
         }
     }
 
