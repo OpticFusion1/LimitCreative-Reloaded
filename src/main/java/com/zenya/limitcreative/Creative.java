@@ -1,13 +1,13 @@
-package me.libraryaddict.Limit;
+package com.zenya.limitcreative;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,12 +29,12 @@ public class Creative extends JavaPlugin implements Listener {
                 String creativeMessage = ChatColor.translateAlternateColorCodes('&', getConfig().getString("ItemMessage"))
                         .replace("%Name%", "");
                 ItemStack item = ((Player) sender).getItemInHand();
-                if (item != null && item.getType() != Material.AIR) {
+                if (item != null && item.getType() != XMaterial.AIR.parseMaterial()) {
                     boolean removed = false;
                     if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
                         ItemMeta meta = item.getItemMeta();
                         Iterator<String> itel = meta.getLore().iterator();
-                        List<String> lore = new ArrayList<String>();
+                        List<String> lore = new ArrayList<>();
                         while (itel.hasNext()) {
                             String s = itel.next();
                             if (s.startsWith(creativeMessage)) {

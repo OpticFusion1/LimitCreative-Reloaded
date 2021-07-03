@@ -1,10 +1,8 @@
-package me.libraryaddict.Limit;
+package com.zenya.limitcreative;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.google.common.base.Objects;
 
 import org.bukkit.Bukkit;
@@ -35,7 +33,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class InteractionListener implements Listener {
     private final String creativeMessage;
-    private final ArrayList<Material> disallowedItems = new ArrayList<Material>();
+    private final ArrayList<Material> disallowedItems = new ArrayList<>();
     private final List<String> disallowedWorlds;
     private final List<String> blacklistedCommands;
     private final JavaPlugin plugin;
@@ -47,8 +45,9 @@ public class InteractionListener implements Listener {
         blacklistedCommands = getConfig().getStringList("BlacklistedCommands");
         for (String disallowed : getConfig().getStringList("DisabledItems")) {
             try {
-                disallowedItems.add(Material.valueOf(disallowed.toUpperCase()));
+                disallowedItems.add(XMaterial.valueOf(disallowed.toUpperCase()).parseMaterial());
             } catch (Exception ex) {
+
             }
         }
     }
@@ -161,7 +160,7 @@ public class InteractionListener implements Listener {
                     item.setItemMeta(meta);
                     event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation().clone().add(0.5, 0, 0.5), item);
                 }
-                event.getBlock().setType(Material.AIR);
+                event.getBlock().setType(XMaterial.AIR.parseMaterial());
             }
         }
     }
@@ -193,7 +192,7 @@ public class InteractionListener implements Listener {
         for (ItemStack item : event.getInventory().getMatrix()) {
             if (isCreativeItem(item)) {
                 if (event.getViewers().get(0).getGameMode() != GameMode.CREATIVE && getConfig().getBoolean("PreventCrafting")) {
-                    event.getInventory().setItem(0, new ItemStack(Material.AIR));
+                    event.getInventory().setItem(0, new ItemStack(XMaterial.AIR.parseMaterial()));
                 } else if (getConfig().getBoolean("RenameCrafting")) {
                     setCreativeItem(event.getViewers().get(0).getName(), event.getInventory().getItem(0));
                 }
@@ -232,7 +231,7 @@ public class InteractionListener implements Listener {
                 for (int i = 0; i < 4; i++) {
                     ItemStack item = items[i];
                     if (isCreativeItem(item)) {
-                        items[i] = new ItemStack(Material.AIR);
+                        items[i] = new ItemStack(XMaterial.AIR.parseMaterial());
                         HashMap<Integer, ItemStack> leftovers = ((Player) event.getEntity()).getInventory().addItem(item);
                         for (ItemStack leftoverItem : leftovers.values()) {
                             ((Player) event.getEntity()).getWorld().dropItem(((Player) event.getEntity()).getEyeLocation(),
@@ -271,7 +270,7 @@ public class InteractionListener implements Listener {
                     item.setItemMeta(meta);
                     block.getWorld().dropItemNaturally(block.getLocation().clone().add(0.5, 0, 0.5), item);
                 }
-                block.setType(Material.AIR);
+                block.setType(XMaterial.AIR.parseMaterial());
             }
         }
     }
@@ -295,7 +294,7 @@ public class InteractionListener implements Listener {
                     item.setItemMeta(meta);
                     block.getWorld().dropItemNaturally(block.getLocation().clone().add(0.5, 0, 0.5), item);
                 }
-                block.setType(Material.AIR);
+                block.setType(XMaterial.AIR.parseMaterial());
             }
         }
     }
@@ -311,7 +310,7 @@ public class InteractionListener implements Listener {
             for (int i = 0; i < 4; i++) {
                 ItemStack item = items[i];
                 if (isCreativeItem(item)) {
-                    items[i] = new ItemStack(Material.AIR);
+                    items[i] = new ItemStack(XMaterial.AIR.parseMaterial());
                     HashMap<Integer, ItemStack> leftovers = event.getPlayer().getInventory().addItem(item);
                     for (ItemStack leftoverItem : leftovers.values()) {
                         event.getPlayer().getWorld().dropItem(event.getPlayer().getEyeLocation(), leftoverItem);
@@ -342,9 +341,9 @@ public class InteractionListener implements Listener {
         }
         if (event.getPlayer().getGameMode() == GameMode.CREATIVE && event.getRightClicked() instanceof ItemFrame) {
             ItemStack item = event.getPlayer().getItemInHand();
-            if (item != null && item.getType() != Material.AIR && !isCreativeItem(item)) {
+            if (item != null && item.getType() != XMaterial.AIR.parseMaterial() && !isCreativeItem(item)) {
                 ItemFrame frame = (ItemFrame) event.getRightClicked();
-                if (frame.getItem() == null || frame.getItem().getType() == Material.AIR) {
+                if (frame.getItem() == null || frame.getItem().getType() == XMaterial.AIR.parseMaterial()) {
                     event.getPlayer().setItemInHand(setCreativeItem(event.getPlayer().getName(), item));
                 }
             }
@@ -365,7 +364,7 @@ public class InteractionListener implements Listener {
         if (event.getWhoClicked().getGameMode() == GameMode.CREATIVE && event.getAction() == InventoryAction.CLONE_STACK
                 && !isCreativeItem(event.getCurrentItem())) {
             ItemStack item = event.getCurrentItem();
-            if (item != null && item.getType() != Material.AIR) {
+            if (item != null && item.getType() != XMaterial.AIR.parseMaterial()) {
                 item = setCreativeItem(event.getWhoClicked().getName(), event.getCurrentItem().clone());
                 item.setAmount(item.getMaxStackSize());
                 event.getWhoClicked().setItemOnCursor(item);
@@ -396,7 +395,7 @@ public class InteractionListener implements Listener {
             Inventory bottom = event.getView().getBottomInventory();
 
             if (!Objects.equal(top, bottom)) {
-                if (event.getOldCursor() != null && event.getOldCursor().getType() != Material.AIR) {
+                if (event.getOldCursor() != null && event.getOldCursor().getType() != XMaterial.AIR.parseMaterial()) {
                     if (isCreativeItem(event.getOldCursor())) {
                         event.setCancelled(true);
                     }
@@ -462,7 +461,7 @@ public class InteractionListener implements Listener {
     }
 
     private ItemStack setCreativeItem(String who, ItemStack item) {
-        if (item != null && item.getType() != Material.AIR && item.getType() != Material.WRITABLE_BOOK && item.getType() != Material.LEGACY_BOOK_AND_QUILL) {
+        if (item != null && item.getType() != XMaterial.AIR.parseMaterial() && item.getType() != XMaterial.WRITABLE_BOOK.parseMaterial()) {
             if(Bukkit.getServer().getPlayer(who) != null && Bukkit.getServer().getPlayer(who).hasPermission("limitcreative.nolore")) {
                 return item;
             }

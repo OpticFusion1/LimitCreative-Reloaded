@@ -1,8 +1,14 @@
 name: LimitCreative
-main: me.libraryaddict.Limit.Creative
+main: com.zenya.limitcreative.Creative
 author: [libraryaddict, Zenya4]
-version: 1.9.0
+version: 1.10.0
 api-version: 1.13
 commands:
   clearlore:
+    description: Remove creative lore
+    usage: /<command>
+    aliases:
+      - removelore
   limitcreativeconvert:
+    description: Convert from SQLite database to MySQL
+    usage: /<command>

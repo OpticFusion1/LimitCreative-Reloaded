@@ -37,3 +37,7 @@
 1.9.0:
 - Migrated project to Maven
 - Fixed permission node "limitcreative.nolore" not working for placed blocks
+
+1.10.0:
+- Added 1.17 support
+- Added cross-compatibility material support

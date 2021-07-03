@@ -1,4 +1,4 @@
-package me.libraryaddict.Limit;
+package com.zenya.limitcreative;
 
 import org.bukkit.block.Block;
 

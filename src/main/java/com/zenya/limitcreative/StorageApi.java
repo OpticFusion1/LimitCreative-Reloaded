@@ -1,4 +1,4 @@
-package me.libraryaddict.Limit;
+package com.zenya.limitcreative;
 
 import java.io.File;
 import java.io.IOException;

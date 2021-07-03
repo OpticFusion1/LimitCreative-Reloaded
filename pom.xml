@@ -4,22 +4,29 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.libraryaddict.Limit</groupId>
+    <groupId>com.zenya.limitcreative</groupId>
     <artifactId>parent</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <!-- Spigot 1.16.4 jar used for compiling -->
     <dependencies>
+        <!-- Spigot 1.17 jar used for compiling -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.4-R0.1-SNAPSHOT</version>
+            <version>1.17-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- XSeries used for multi-version compatibility -->
+        <dependency>
+            <groupId>com.github.cryptomorin</groupId>
+            <artifactId>XSeries</artifactId>
+            <version>8.1.0</version>
         </dependency>
     </dependencies>
 
-    <!-- Main repo for Spigot API -->
     <repositories>
+        <!-- Main repo for Spigot API -->
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
@@ -36,6 +43,43 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+
+            <!-- Used to shade XSeries into jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>com.cryptomorin.xseries</pattern>
+                            <shadedPattern>com.zenya.limitcreative.xseries</shadedPattern>
+                        </relocation>
+                    </relocations>
+                    <!-- Here you can remove the classes you don't use. -->
+                    <!-- These are some examples. -->
+                    <!-- The "unused" package and SkullCacheListener are excluded by default. -->
+                    <!-- Some utilities such a XItemStack depend on more than 3 other classes, so watch out. -->
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>com/cryptomorin/xseries/XBiome*</exclude>
+                                <exclude>com/cryptomorin/xseries/NMSExtras*</exclude>
+                                <exclude>com/cryptomorin/xseries/NoteBlockMusic*</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
 
         <directory>target</directory>
@@ -47,6 +91,7 @@
                 <directory>${basedir}/src/main/resources/</directory>
                 <includes>
                     <include>plugin.yml</include>
+                    <include>config.yml</include>
                 </includes>
             </resource>
         </resources>
