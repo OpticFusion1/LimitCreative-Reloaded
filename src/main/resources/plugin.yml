@@ -1,8 +1,8 @@
 name: LimitCreative
 main: com.zenya.limitcreative.Creative
 author: [libraryaddict, Zenya4]
-version: 1.10.0
-api-version: 1.13
+version: ${project.version}
+api-version: 1.18
 commands:
   clearlore:
     description: Remove creative lore
