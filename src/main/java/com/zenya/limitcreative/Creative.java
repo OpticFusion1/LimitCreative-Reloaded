@@ -1,14 +1,18 @@
 package com.zenya.limitcreative;
 
+import com.zenya.limitcreative.Updater.UpdateResult;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -71,6 +75,9 @@ public class Creative extends JavaPlugin implements Listener {
   @Override
   public void onEnable() {
 
+    new MetricsLite(this, 13819);
+    checkForUpdate();
+
     File configFile = new File(this.getDataFolder(), "config.yml");
     if (!configFile.exists()) {
       saveDefaultConfig();
@@ -101,4 +108,24 @@ public class Creative extends JavaPlugin implements Listener {
     }
   }
 
+  private void checkForUpdate() {
+    Logger logger = getLogger();
+    FileConfiguration pluginConfig = getConfig();
+    Updater updater = new Updater(this, 98914, false);
+    Updater.UpdateResult result = updater.getResult();
+    if (result != UpdateResult.UPDATE_AVAILABLE) {
+      return;
+    }
+    if (!pluginConfig.getBoolean("download-update")) {
+      logger.info("===== UPDATE AVAILABLE ====");
+      logger.info("https://www.spigotmc.org/resources/98914");
+      logger.log(Level.INFO, "Installed Version: {0} New Version:{1}", new Object[]{updater.getOldVersion(), updater.getVersion()});
+      logger.info("===== UPDATE AVAILABLE ====");
+      return;
+    }
+    logger.info("==== UPDATE AVAILABLE ====");
+    logger.info("====    DOWNLOADING   ====");
+    updater.downloadUpdate();
+  }
 }
+  
