@@ -92,17 +92,14 @@ public class Creative extends JavaPlugin implements Listener {
     Bukkit.getPluginManager().registerEvents(listener, this);
     StorageApi.setMainPlugin(this);
     if (getConfig().getBoolean("SaveBlocks")) {
-      Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-        @Override
-        public void run() {
-          if (getConfig().getBoolean("UseMysql")) {
-            StorageApi.setMysqlDetails(getConfig().getString("MysqlUsername"),
-                    getConfig().getString("MysqlPassword"), getConfig().getString("MysqlHost"), getConfig()
-                    .getString("MysqlDatabase"));
-            StorageApi.loadBlocksFromMysql();
-          } else {
-            StorageApi.loadBlocksFromFlatfile();
-          }
+      Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
+        if (getConfig().getBoolean("UseMysql")) {
+          StorageApi.setMysqlDetails(getConfig().getString("MysqlUsername"),
+                  getConfig().getString("MysqlPassword"), getConfig().getString("MysqlHost"), getConfig()
+                  .getString("MysqlDatabase"));
+          StorageApi.loadBlocksFromMysql();
+        } else {
+          StorageApi.loadBlocksFromFlatfile();
         }
       }, 10);
     }
@@ -128,4 +125,3 @@ public class Creative extends JavaPlugin implements Listener {
     updater.downloadUpdate();
   }
 }
-  

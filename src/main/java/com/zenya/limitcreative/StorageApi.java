@@ -7,6 +7,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -19,7 +20,7 @@ public class StorageApi {
 
   private static Connection connection;
   private static JavaPlugin mainPlugin;
-  private static HashMap<String, HashMap<Loc, String>> markedBlocks = new HashMap<String, HashMap<Loc, String>>();
+  private static HashMap<String, HashMap<Loc, String>> markedBlocks = new HashMap<>();
   private static String mysqlDatabase, mysqlUsername, mysqlPassword, mysqlHost;
   private static boolean useMysql;
 
@@ -28,7 +29,7 @@ public class StorageApi {
       Class.forName("com.mysql.jdbc.Driver").newInstance();
       String conn = "jdbc:mysql://" + mysqlHost + "/" + mysqlDatabase;
       return DriverManager.getConnection(conn, mysqlUsername, mysqlPassword);
-    } catch (Exception ex) {
+    } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | SQLException ex) {
       System.err.println("[LimitCreative] Unknown error while fetching MySQL connection. Is the mysql details correct? "
               + ex.getMessage());
     }
@@ -51,10 +52,10 @@ public class StorageApi {
       }
       try {
         connection.createStatement().execute("DO 1");
-      } catch (Exception ex) {
+      } catch (SQLException ex) {
         connection = connectMysql();
       }
-    } catch (Exception ex) {
+    } catch (SQLException ex) {
       ex.printStackTrace();
     }
     return connection;
@@ -87,7 +88,7 @@ public class StorageApi {
             }
           }
         }
-      } catch (Exception e) {
+      } catch (NumberFormatException e) {
         e.printStackTrace();
       }
     }
@@ -103,14 +104,14 @@ public class StorageApi {
           ResultSet rs = stmt.executeQuery();
           while (rs.next()) {
             if (!markedBlocks.containsKey(world.getName())) {
-              markedBlocks.put(world.getName(), new HashMap<Loc, String>());
+              markedBlocks.put(world.getName(), new HashMap<>());
             }
             markedBlocks.get(world.getName()).put(new Loc(rs.getInt("x"), rs.getInt("y"), rs.getInt("z")),
                     rs.getString("lore"));
           }
         }
       }
-    } catch (Exception ex) {
+    } catch (SQLException ex) {
       ex.printStackTrace();
     }
   }
@@ -121,36 +122,34 @@ public class StorageApi {
 
   public static void markBlock(final String world, final Loc loc, final String msg) {
     if (!markedBlocks.containsKey(world)) {
-      markedBlocks.put(world, new HashMap<Loc, String>());
+      markedBlocks.put(world, new HashMap<>());
     }
     markedBlocks.get(world).put(loc, msg);
-    Bukkit.getScheduler().scheduleAsyncDelayedTask(mainPlugin, new Runnable() {
-      public void run() {
-        if (useMysql) {
-          try {
-            PreparedStatement stmt = getConnection().prepareStatement(
-                    "INSERT INTO LimitCreative (`world`, `x`, `y`, `z`, `lore`) VALUES (?, ?, ?, ?, ?);");
-            stmt.setString(1, world);
-            stmt.setInt(2, loc.x);
-            stmt.setInt(3, loc.y);
-            stmt.setInt(4, loc.z);
-            stmt.setString(5, msg);
-            stmt.execute();
-          } catch (Exception ex) {
-            ex.printStackTrace();
+    Bukkit.getScheduler().scheduleAsyncDelayedTask(mainPlugin, () -> {
+      if (useMysql) {
+        try {
+          PreparedStatement stmt = getConnection().prepareStatement(
+                  "INSERT INTO LimitCreative (`world`, `x`, `y`, `z`, `lore`) VALUES (?, ?, ?, ?, ?);");
+          stmt.setString(1, world);
+          stmt.setInt(2, loc.x);
+          stmt.setInt(3, loc.y);
+          stmt.setInt(4, loc.z);
+          stmt.setString(5, msg);
+          stmt.execute();
+        } catch (SQLException ex) {
+          ex.printStackTrace();
+        }
+      } else {
+        File file = new File(mainPlugin.getDataFolder(), "blocks.yml");
+        try {
+          if (!file.exists()) {
+            file.createNewFile();
           }
-        } else {
-          File file = new File(mainPlugin.getDataFolder(), "blocks.yml");
-          try {
-            if (!file.exists()) {
-              file.createNewFile();
-            }
-            YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-            config.set(world + "." + loc.x + "." + loc.y + "." + loc.z, msg);
-            config.save(file);
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
+          YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+          config.set(world + "." + loc.x + "." + loc.y + "." + loc.z, msg);
+          config.save(file);
+        } catch (IOException e) {
+          e.printStackTrace();
         }
       }
     });
@@ -185,33 +184,31 @@ public class StorageApi {
     if (markedBlocks.get(world).isEmpty()) {
       markedBlocks.remove(world);
     }
-    Bukkit.getScheduler().scheduleAsyncDelayedTask(mainPlugin, new Runnable() {
-      public void run() {
-        if (useMysql) {
-          try {
-            PreparedStatement stmt = getConnection().prepareStatement(
-                    "DELETE FROM `LimitCreative` WHERE `world`=? AND `x`=? AND `y`=? AND `z`=?");
-            stmt.setString(1, world);
-            stmt.setInt(2, loc.x);
-            stmt.setInt(3, loc.y);
-            stmt.setInt(4, loc.z);
-            stmt.execute();
-          } catch (Exception ex) {
-            ex.printStackTrace();
+    Bukkit.getScheduler().scheduleAsyncDelayedTask(mainPlugin, () -> {
+      if (useMysql) {
+        try {
+          PreparedStatement stmt = getConnection().prepareStatement(
+                  "DELETE FROM `LimitCreative` WHERE `world`=? AND `x`=? AND `y`=? AND `z`=?");
+          stmt.setString(1, world);
+          stmt.setInt(2, loc.x);
+          stmt.setInt(3, loc.y);
+          stmt.setInt(4, loc.z);
+          stmt.execute();
+        } catch (SQLException ex) {
+          ex.printStackTrace();
+        }
+      } else {
+        File file = new File(mainPlugin.getDataFolder(), "blocks.yml");
+        if (file.exists()) {
+          YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+          String blockPath = world + "." + loc.x + "." + loc.y + "." + loc.z;
+          if (config.contains(blockPath)) {
+            config.set(blockPath, null);
           }
-        } else {
-          File file = new File(mainPlugin.getDataFolder(), "blocks.yml");
-          if (file.exists()) {
-            YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-            String blockPath = world + "." + loc.x + "." + loc.y + "." + loc.z;
-            if (config.contains(blockPath)) {
-              config.set(blockPath, null);
-            }
-            try {
-              config.save(file);
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
+          try {
+            config.save(file);
+          } catch (IOException e) {
+            e.printStackTrace();
           }
         }
       }

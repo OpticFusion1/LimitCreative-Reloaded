@@ -118,12 +118,11 @@ public class MetricsLite {
       config.addDefault("logResponseStatusText", false);
 
       // Inform the server owners about bStats
-      config.options().header(
-              "bStats collects some data for plugin authors like how many servers are using their plugins.\n"
-              + "To honor their work, you should not disable it.\n"
-              + "This has nearly no effect on the server performance!\n"
-              + "Check out https://bStats.org/ to learn more :)"
-      ).copyDefaults(true);
+      config.options().header("""
+                              bStats collects some data for plugin authors like how many servers are using their plugins.
+                              To honor their work, you should not disable it.
+                              This has nearly no effect on the server performance!
+                              Check out https://bStats.org/ to learn more :)""").copyDefaults(true);
       try {
         config.save(configFile);
       } catch (IOException ignored) {
@@ -267,8 +266,8 @@ public class MetricsLite {
         Bukkit.getServicesManager().getRegistrations(service).forEach(provider -> {
           try {
             Object serviceProvider = provider.getService().getMethod("getPluginData").invoke(provider.getProvider());
-            if (serviceProvider instanceof JsonObject) {
-              pluginData.add((JsonObject) serviceProvider);
+            if (serviceProvider instanceof JsonObject jsonObject) {
+              pluginData.add(jsonObject);
             } else { // old bstats version compatibility
               try {
                 Class<?> jsonObjectJsonSimple = Class.forName("org.json.simple.JSONObject");
@@ -355,7 +354,7 @@ public class MetricsLite {
     }
 
     if (logResponseStatusText) {
-      plugin.getLogger().info(builder + "Sent data to bStats and received response: ");
+      plugin.getLogger().log(Level.INFO, "{0}Sent data to bStats and received response: ", builder);
     }
   }
 

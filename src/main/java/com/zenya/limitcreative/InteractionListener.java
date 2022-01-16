@@ -70,11 +70,8 @@ public class InteractionListener implements Listener {
   }
 
   private boolean checkEntity(Entity entity) {
-    if (getConfig().getBoolean("PreventUsage") && entity != null && entity instanceof Player
-            && ((Player) entity).getGameMode() != GameMode.CREATIVE && isCreativeItem(((Player) entity).getItemInHand())) {
-      return true;
-    }
-    return false;
+    return getConfig().getBoolean("PreventUsage") && entity != null && entity instanceof Player
+            && ((Player) entity).getGameMode() != GameMode.CREATIVE && isCreativeItem(((Player) entity).getItemInHand());
   }
 
   private FileConfiguration getConfig() {
@@ -168,7 +165,7 @@ public class InteractionListener implements Listener {
         Collection<ItemStack> drops = event.getBlock().getDrops(event.getPlayer().getItemInHand());
         for (ItemStack item : drops) {
           ItemMeta meta = item.getItemMeta();
-          List<String> lore = new ArrayList<String>();
+          List<String> lore = new ArrayList<>();
           if (meta.hasLore()) {
             lore = meta.getLore();
           }
@@ -190,11 +187,11 @@ public class InteractionListener implements Listener {
     if (isCreativeItem(event.getContents().getIngredient())) {
       List<String> lore = event.getContents().getIngredient().getItemMeta().getLore();
       ItemStack[] items = event.getContents().getContents();
-      for (int i = 0; i < items.length; i++) {
-        if (items[i] != null && items[i].getItemMeta() != null) {
-          ItemMeta meta = items[i].getItemMeta();
+      for (ItemStack item : items) {
+        if (item != null && item.getItemMeta() != null) {
+          ItemMeta meta = item.getItemMeta();
           meta.setLore(lore);
-          items[i].setItemMeta(meta);
+          item.setItemMeta(meta);
         }
       }
       event.getContents().setContents(items);
@@ -230,8 +227,8 @@ public class InteractionListener implements Listener {
       if (!event.getWhoClicked().hasPermission("limitcreative.useblacklistitems")) {
 
         event.setCancelled(true);
-        if (event.getWhoClicked() instanceof Player) {
-          ((Player) event.getWhoClicked()).sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("DisabledItemMessage")));
+        if (event.getWhoClicked() instanceof Player player) {
+          player.sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("DisabledItemMessage")));
         }
       }
     }
@@ -278,7 +275,7 @@ public class InteractionListener implements Listener {
         String message = StorageApi.unmarkBlock(block);
         for (ItemStack item : block.getDrops()) {
           ItemMeta meta = item.getItemMeta();
-          List<String> lore = new ArrayList<String>();
+          List<String> lore = new ArrayList<>();
           if (meta.hasLore()) {
             lore = meta.getLore();
           }
@@ -302,7 +299,7 @@ public class InteractionListener implements Listener {
         String message = StorageApi.unmarkBlock(block);
         for (ItemStack item : block.getDrops()) {
           ItemMeta meta = item.getItemMeta();
-          List<String> lore = new ArrayList<String>();
+          List<String> lore = new ArrayList<>();
           if (meta.hasLore()) {
             lore = meta.getLore();
           }
@@ -479,7 +476,7 @@ public class InteractionListener implements Listener {
       }
       if (!isCreativeItem(item)) {
         ItemMeta meta = item.getItemMeta();
-        List<String> lore = new ArrayList<String>();
+        List<String> lore = new ArrayList<>();
         if (meta.hasLore()) {
           lore = meta.getLore();
         }

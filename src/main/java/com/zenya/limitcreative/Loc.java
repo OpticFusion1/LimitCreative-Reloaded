@@ -18,8 +18,7 @@ public class Loc {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof Loc) {
-      Loc loc = (Loc) obj;
+    if (obj instanceof Loc loc) {
       return loc.x == x && loc.y == y && loc.z == z;
     }
     return false;
