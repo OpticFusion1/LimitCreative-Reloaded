@@ -1,5 +1,5 @@
 # Do not change this value
-config-version: 5
+config-version: 6
 
 # The message that appears on the item.
 # Make sure to end it with "%Name%"
@@ -10,6 +10,9 @@ DisallowedCommandMessage: '&4You are not allowed to use this command in creative
 
 # Error shown to player when a disabled item is used in Creative mode
 DisabledItemMessage: '&4You are not allowed to use this item in creative mode'
+
+# Error shown to player when using an illegal items
+DisallowedIllegalItemMessage: '&4You are not allowed to use this item'
 
 # The following items are messages for when LimitCreative commands are used (/removelore, /limitcreativeconvert)
 # Error shown when /removelore command is used on an item with no Creative lore
@@ -49,6 +52,8 @@ PreventArmor: true
 MarkBlocks: true
 # Does it prevent creative items being dropped?
 PreventDrop: false
+# Does it prevent illegal items from being used
+PreventIllegalItems: true
 
 # What worlds are disabled for this.
 # It means this plugin will ignore that world.
@@ -57,11 +62,11 @@ PreventDrop: false
 WorldsDisabled:
   - creativebuild
   - creativeplay
-  
+
 # With block/items will be disabled when in creative limited mode?
 # Don't use ID's, only full NAME of item. Names can be found at http://jd.bukkit.org/rb/apidocs/org/bukkit/Material.html
 DisabledItems: []
-  
+
 # Does the plugin save the marked blocks into a config? Overtime this may get.. laggy.
 SaveBlocks: true
 
