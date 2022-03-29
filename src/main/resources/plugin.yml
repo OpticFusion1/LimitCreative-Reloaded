@@ -4,11 +4,6 @@ author: [libraryaddict, Zenya4]
 version: ${project.version}
 api-version: 1.18
 commands:
-  clearlore:
-    description: Remove creative lore
-    usage: /<command>
-    aliases:
-      - removelore
-  limitcreativeconvert:
-    description: Convert from SQLite database to MySQL
-    usage: /<command>
+  limitcreative:
+    description: Allows you to either clear an item's creative lore or convert the database from SQLite to MySQL
+    usage: /<command> clearLore | /<command> convert

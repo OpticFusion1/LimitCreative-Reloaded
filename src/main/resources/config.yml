@@ -1,33 +1,35 @@
 # Do not change this value
-config-version: 6
+config-version: 7
 
 # The message that appears on the item.
 # Make sure to end it with "%Name%"
-ItemMessage: '&6Spawned in creative by %Name%'
+itemMessage: '&6Spawned in creative by %Name%'
 
 # Error shown to player when a disallowed command is used in Creative mode
-DisallowedCommandMessage: '&4You are not allowed to use this command in creative mode'
+disallowedCommandMessage: '&4You are not allowed to use this command in creative mode'
 
 # Error shown to player when a disabled item is used in Creative mode
-DisabledItemMessage: '&4You are not allowed to use this item in creative mode'
+disabledItemMessage: '&4You are not allowed to use this item in creative mode'
 
 # Error shown to player when using an illegal items
-DisallowedIllegalItemMessage: '&4You are not allowed to use this item'
+disallowedIllegalItemMessage: '&4You are not allowed to use this item'
 
 # The following items are messages for when LimitCreative commands are used (/removelore, /limitcreativeconvert)
+# Error shown when the console runs the /limitcreative command
+commandRanAsConsole: "&4You must be a player to run this command"
 # Error shown when /removelore command is used on an item with no Creative lore
-NoCreativeLoreOnItem: '&cCannot find the creative message on the item!'
+noCreativeLoreOnItem: '&cCannot find the creative message on the item!'
 # Success message for /removelore
-LoreRemoveSuccess: '&aRemoved the creative lore from the item!'
+loreRemoveSuccess: '&aRemoved the creative lore from the item!'
 # Error shown when /removelore command is used on an empty inventory slot
-NotHoldingItem: '&cYou must be holding an item to do this!'
+notHoldingItem: '&cYou must be holding an item to do this!'
 # Error shown when player does not have permission to use a command
-NoPermissionMessage: '&4You do not have permission to use this command!'
+noPermissionMessage: '&4You do not have permission to use this command!'
 # Success message for /limitcreativeconvert
-ConvertSQLiteToMySQL: '&aSuccessfully converted SQLite database to MySQL!'
+convertSQLiteToMySQL: '&aSuccessfully converted SQLite database to MySQL!'
 
 # Commands that should be disabled when users are in Creative mode
-BlacklistedCommands:
+blacklistedCommands:
   - auction
   - ah
   - privatevault
@@ -36,44 +38,44 @@ BlacklistedCommands:
   - pv
 
 # Rename the crafting result if its a spawned item
-RenameCrafting: true
+renameCrafting: true
 
 # The following does not affect creative mode. Only non-creative players will be affected
 
 # Prevent their using it to attack, defend, place, etc.
-PreventUsage: true
+preventUsage: true
 # Prevent their using it to craft items
-PreventCrafting: true
+preventCrafting: true
 # Prevent using it in a anvil
-PreventAnvil: true
+preventAnvil: true
 # Prevent them from using the armour in survival mode
-PreventArmor: true
+preventArmor: true
 # Mark blocks which are creative spawned in to drop creative spawned items.
-MarkBlocks: true
+markBlocks: true
 # Does it prevent creative items being dropped?
-PreventDrop: false
+preventDrop: false
 # Does it prevent illegal items from being used
-PreventIllegalItems: true
+preventIllegalItems: true
 
 # What worlds are disabled for this.
 # It means this plugin will ignore that world.
 # Items carried over from that world WILL be usable.
 # You will need to have another plugin to seperate inventories.
-WorldsDisabled:
+worldsDisabled:
   - creativebuild
   - creativeplay
 
 # With block/items will be disabled when in creative limited mode?
 # Don't use ID's, only full NAME of item. Names can be found at http://jd.bukkit.org/rb/apidocs/org/bukkit/Material.html
-DisabledItems: []
+disabledItems: []
 
 # Does the plugin save the marked blocks into a config? Overtime this may get.. laggy.
-SaveBlocks: true
+saveBlocks: true
 
 # Turn this to true if you wish to use mysql for the saveblocks. Else it will default to flatfile.
-UseMysql: false
+useMysql: false
 # You will need to enter your mysql details here.
-MysqlHost: www.mydatabase.com
-MysqlUsername: root
-MysqlPassword: ilovecows
-MysqlDatabase: database
+mysqlHost: www.mydatabase.com
+mysqlUsername: root
+mysqlPassword: ilovecows
+mysqlDatabase: database

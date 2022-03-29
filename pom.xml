@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.zenya.limitcreative</groupId>
-    <artifactId>LimitedCreative-Reloaded</artifactId>
-    <version>3.2</version>
+    <groupId>optic_fusion1</groupId>
+    <artifactId>LimitCreative</artifactId>
+    <version>3.3</version>
     <packaging>jar</packaging>
 
     <repositories>
@@ -75,7 +75,7 @@
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
+            <artifactId>spigot-api</artifactId>
             <version>1.18.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
