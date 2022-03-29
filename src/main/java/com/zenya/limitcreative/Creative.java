@@ -37,12 +37,12 @@ public class Creative extends JavaPlugin implements Listener {
         listener = new InteractionListener(this);
         Bukkit.getPluginManager().registerEvents(listener, this);
         StorageApi.setMainPlugin(this);
-        if (getConfig().getBoolean("SaveBlocks")) {
+        if (getConfig().getBoolean("saveBlocks")) {
             Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
-                if (getConfig().getBoolean("UseMysql")) {
-                    StorageApi.setMysqlDetails(getConfig().getString("MysqlUsername"),
-                            getConfig().getString("MysqlPassword"), getConfig().getString("MysqlHost"), getConfig()
-                            .getString("MysqlDatabase"));
+                if (getConfig().getBoolean("useMysql")) {
+                    StorageApi.setMysqlDetails(getConfig().getString("mysqlUsername"),
+                            getConfig().getString("mysqlPassword"), getConfig().getString("mysqlHost"), getConfig()
+                            .getString("mysqlDatabase"));
                     StorageApi.loadBlocksFromMysql();
                 } else {
                     StorageApi.loadBlocksFromFlatfile();

@@ -60,10 +60,10 @@ public class InteractionListener implements Listener {
 
     public InteractionListener(JavaPlugin plugin) {
         this.plugin = plugin;
-        creativeMessage = ChatColor.translateAlternateColorCodes('&', getConfig().getString("ItemMessage"));
-        disallowedWorlds = getConfig().getStringList("WorldsDisabled");
-        blacklistedCommands = getConfig().getStringList("BlacklistedCommands");
-        for (String disallowed : getConfig().getStringList("DisabledItems")) {
+        creativeMessage = ChatColor.translateAlternateColorCodes('&', getConfig().getString("itemMessage"));
+        disallowedWorlds = getConfig().getStringList("worldsDisabled");
+        blacklistedCommands = getConfig().getStringList("blacklistedCommands");
+        for (String disallowed : getConfig().getStringList("disabledItems")) {
             try {
                 disallowedItems.add(Material.valueOf(disallowed.toUpperCase()));
             } catch (Exception ex) {
@@ -73,7 +73,7 @@ public class InteractionListener implements Listener {
     }
 
     private boolean checkEntity(Entity entity) {
-        return getConfig().getBoolean("PreventUsage") && entity != null && entity instanceof Player
+        return getConfig().getBoolean("preventUsage") && entity != null && entity instanceof Player
                 && ((Player) entity).getGameMode() != GameMode.CREATIVE && isCreativeItem(((Player) entity).getItemInHand());
     }
 
@@ -121,7 +121,7 @@ public class InteractionListener implements Listener {
         String command = event.getMessage().replace("/", "");
         for (String cmd : blacklistedCommands) {
             if (command.startsWith(cmd) || cmd.equals("*")) {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("DisallowedCommandMessage")));
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("disallowedCommandMessage")));
                 event.setCancelled(true);
             }
         }
@@ -142,7 +142,7 @@ public class InteractionListener implements Listener {
         if (event.isCancelled() || disallowedWorlds.contains(event.getBlock().getWorld().getName())) {
             return;
         }
-        if (getConfig().getBoolean("MarkBlocks")
+        if (getConfig().getBoolean("markBlocks")
                 && (isCreativeItem(event.getItemInHand()) || event.getPlayer().getGameMode() == GameMode.CREATIVE)) {
             if (!event.getPlayer().hasPermission("limitcreative.nolore")) {
                 StorageApi.markBlock(event.getBlockPlaced(), getCreativeString(event.getItemInHand()));
@@ -210,7 +210,7 @@ public class InteractionListener implements Listener {
             if (isCreativeItem(item)) {
                 if (event.getViewers().get(0).getGameMode() != GameMode.CREATIVE && getConfig().getBoolean("PreventCrafting")) {
                     event.getInventory().setItem(0, new ItemStack(Material.AIR));
-                } else if (getConfig().getBoolean("RenameCrafting")) {
+                } else if (getConfig().getBoolean("renameCrafting")) {
                     setCreativeItem(event.getViewers().get(0).getName(), event.getInventory().getItem(0));
                 }
                 break;
@@ -220,7 +220,7 @@ public class InteractionListener implements Listener {
 
     @EventHandler
     public void on(PlayerJoinEvent event) {
-        if (getConfig().getBoolean("PreventIllegalItems")) {
+        if (getConfig().getBoolean("preventIllegalItems")) {
             for (ItemStack item : event.getPlayer().getInventory()) {
                 if (isIllegalPlayerHead(item)) {
                     event.getPlayer().getInventory().remove(item);
@@ -247,7 +247,7 @@ public class InteractionListener implements Listener {
 
         event.setCursor(setCreativeItem(event.getWhoClicked().getName(), event.getCursor()));
 
-        if (getConfig().getBoolean("PreventIllegalItems") && isIllegalPlayerHead(event.getCursor())) {
+        if (getConfig().getBoolean("preventIllegalItems") && isIllegalPlayerHead(event.getCursor())) {
             event.setCancelled(true);
             return;
         }
@@ -257,7 +257,7 @@ public class InteractionListener implements Listener {
 
                 event.setCancelled(true);
                 if (event.getWhoClicked() instanceof Player player) {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("DisabledItemMessage")));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', getConfig().getString("disabledItemMessage")));
                 }
             }
         }
@@ -268,7 +268,7 @@ public class InteractionListener implements Listener {
         if (disallowedWorlds.contains(event.getEntity().getWorld().getName())) {
             return;
         }
-        if (getConfig().getBoolean("PreventArmor")) {
+        if (getConfig().getBoolean("preventArmor")) {
             if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getGameMode() != GameMode.CREATIVE) {
                 ItemStack[] items = ((Player) event.getEntity()).getInventory().getArmorContents();
                 for (int i = 0; i < 4; i++) {
@@ -347,7 +347,7 @@ public class InteractionListener implements Listener {
         if (disallowedWorlds.contains(event.getPlayer().getWorld().getName())) {
             return;
         }
-        if (getConfig().getBoolean("PreventArmor") && event.getPlayer().getGameMode() == GameMode.CREATIVE
+        if (getConfig().getBoolean("preventArmor") && event.getPlayer().getGameMode() == GameMode.CREATIVE
                 && event.getNewGameMode() != GameMode.CREATIVE) {
             ItemStack[] items = event.getPlayer().getInventory().getArmorContents();
             for (int i = 0; i < 4; i++) {
@@ -400,8 +400,8 @@ public class InteractionListener implements Listener {
         }
         if (event.getWhoClicked().getGameMode() != GameMode.CREATIVE && event.getInventory().getType() == InventoryType.ANVIL
                 && isCreativeItem(event.getCurrentItem())
-                || getConfig().getBoolean("PreventIllegalItems") && isIllegalPlayerHead(event.getCurrentItem())) {
-            if (getConfig().getBoolean("PreventAnvil")) {
+                || getConfig().getBoolean("preventIllegalItems") && isIllegalPlayerHead(event.getCurrentItem())) {
+            if (getConfig().getBoolean("preventAnvil")) {
                 event.setCancelled(true);
             }
         }
@@ -429,14 +429,14 @@ public class InteractionListener implements Listener {
             return;
         }
 
-        if (getConfig().getBoolean("PreventTransfer")) {
+        if (getConfig().getBoolean("preventTransfer")) {
             Inventory top = event.getView().getTopInventory();
             Inventory bottom = event.getView().getBottomInventory();
 
             if (!Objects.equal(top, bottom)) {
                 if (event.getOldCursor() != null && event.getOldCursor().getType() != Material.AIR) {
                     if (isCreativeItem(event.getOldCursor())
-                            || getConfig().getBoolean("PreventIllegalItems") && isIllegalPlayerHead(event.getOldCursor())) {
+                            || getConfig().getBoolean("preventIllegalItems") && isIllegalPlayerHead(event.getOldCursor())) {
                         event.setCancelled(true);
                     }
                 }
@@ -449,7 +449,7 @@ public class InteractionListener implements Listener {
         if (disallowedWorlds.contains(event.getPlayer().getWorld().getName())) {
             return;
         }
-        if (getConfig().getBoolean("PreventIllegalItems") && isIllegalPlayerHead(event.getItem().getItemStack())) {
+        if (getConfig().getBoolean("preventIllegalItems") && isIllegalPlayerHead(event.getItem().getItemStack())) {
             event.setCancelled(true);
             return;
         }
@@ -466,9 +466,9 @@ public class InteractionListener implements Listener {
             return;
         }
 
-        if (getConfig().getBoolean("PreventDrop")) {
+        if (getConfig().getBoolean("preventDrop")) {
             ItemStack itemStack = event.getItemDrop().getItemStack();
-            if (isCreativeItem(itemStack) || getConfig().getBoolean("PreventIllegalItems")
+            if (isCreativeItem(itemStack) || getConfig().getBoolean("preventIllegalItems")
                     && isIllegalPlayerHead(itemStack)) {
                 event.getItemDrop().remove();
             }

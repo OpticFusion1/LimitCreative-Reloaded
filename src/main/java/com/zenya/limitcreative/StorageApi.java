@@ -131,9 +131,9 @@ public class StorageApi {
                     PreparedStatement stmt = getConnection().prepareStatement(
                             "INSERT INTO LimitCreative (`world`, `x`, `y`, `z`, `lore`) VALUES (?, ?, ?, ?, ?);");
                     stmt.setString(1, world);
-                    stmt.setInt(2, loc.x);
-                    stmt.setInt(3, loc.y);
-                    stmt.setInt(4, loc.z);
+                    stmt.setInt(2, loc.x());
+                    stmt.setInt(3, loc.y());
+                    stmt.setInt(4, loc.z());
                     stmt.setString(5, msg);
                     stmt.execute();
                 } catch (SQLException ex) {
@@ -146,7 +146,7 @@ public class StorageApi {
                         file.createNewFile();
                     }
                     YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-                    config.set(world + "." + loc.x + "." + loc.y + "." + loc.z, msg);
+                    config.set(world + "." + loc.x() + "." + loc.y() + "." + loc.z(), msg);
                     config.save(file);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -190,9 +190,9 @@ public class StorageApi {
                     PreparedStatement stmt = getConnection().prepareStatement(
                             "DELETE FROM `LimitCreative` WHERE `world`=? AND `x`=? AND `y`=? AND `z`=?");
                     stmt.setString(1, world);
-                    stmt.setInt(2, loc.x);
-                    stmt.setInt(3, loc.y);
-                    stmt.setInt(4, loc.z);
+                    stmt.setInt(2, loc.x());
+                    stmt.setInt(3, loc.y());
+                    stmt.setInt(4, loc.z());
                     stmt.execute();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -201,7 +201,7 @@ public class StorageApi {
                 File file = new File(mainPlugin.getDataFolder(), "blocks.yml");
                 if (file.exists()) {
                     YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-                    String blockPath = world + "." + loc.x + "." + loc.y + "." + loc.z;
+                    String blockPath = world + "." + loc.x() + "." + loc.y() + "." + loc.z();
                     if (config.contains(blockPath)) {
                         config.set(blockPath, null);
                     }
